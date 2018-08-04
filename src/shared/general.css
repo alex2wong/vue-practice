@@ -1,0 +1,23 @@
+.a-flexbox {
+  display: flex;
+  flex-direction: row;
+}
+
+.a-flex {
+  flex: 1 0;
+}
+
+.a-flexbox--column {
+
+  flex-direction: column;
+}
+.a-flex--center-item {
+  align-items: center;
+}
+.a-flex__tile {
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 1px 0px 5px rgba(0,0,0,0.2);
+  border-radius: 2px;
+  background: #fafafa;
+}
