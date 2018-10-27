@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="search" name="" id="" v-model="filterStr" @keyup="onSearchKeyUp" placeholder="filter city by name">
+    <input type="search" name="" id="" v-model="filterStr" placeholder="filter city by name">
   </div>
 </template>
 <style>
@@ -9,17 +9,27 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import store from '../store'; 
 // import searchService from '@/components/search.service.ts';
-import store from './store';
  
 @Component
 export default class SearchBar extends Vue {
 
-  filterStr = store.getFilter();
   onSearchKeyUp(evt: Event) {
     const value = (evt.target as HTMLInputElement).value;
-    store.updateFilter(value);
+    console.warn(`filter value: ${value}`);
+    store.commit('updateFilterStr', value);
     this.$emit('search', value);
+  }
+
+  get filterStr() {
+    return store.getters.filterStr;
+  }
+  
+  set filterStr(newVal: string) {
+    console.warn(`filter value: ${newVal}`);
+    store.commit('updateFilterStr', newVal);
+    this.$emit('search', newVal);
   }
 }
 </script>

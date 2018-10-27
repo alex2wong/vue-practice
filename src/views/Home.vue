@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
-    <SearchBar @search="onSearch"></SearchBar>
-    <list-component :filterStr="filterStr"></list-component>
+    <SearchBar></SearchBar>
+    <list-component></list-component>
   </div>
 </template>
 
@@ -19,10 +19,6 @@ import SearchBar from '@/components/search-component.vue';
   },
 })
 export default class Home extends Vue {
-  filterStr = '';
 
-  onSearch(newFilter: string) {
-    this.filterStr = newFilter;
-  }
 }
 </script>

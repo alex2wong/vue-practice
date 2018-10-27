@@ -15,43 +15,38 @@ import { Component, Prop, Watch } from 'vue-property-decorator';
 import axios from 'axios';
 import geojson from 'geojson';
 import Chart from 'chart.js';
-import store from './store';
+import store from '../store';
  
 @Component
 export default class ListComponent extends Vue{
   items: Item[] = [];
   loading = false;
-  
-  @Prop({ default: '' })
-  filterStr!: string;
 
   @Watch('filterStr')
   updateFiltered() {
-    if (!this.filterStr) {
-      this.items = store.getFeatures(this.filterStr); 
-    } else {
-      this.items = store.getFeatures(store.getFilter()); 
-    }
+    console.warn(`filterStr changed to ${this.filterStr}`);
+    this.items = store.getters.getFeatures(this.filterStr); 
+  }
+
+  get filterStr() {
+    return store.getters.filterStr;
   }
 
   mounted() {
     // fetch the features, each time keyUp -> searchCity
-    // http://192.168.1.104:8081
-    axios.get('./static/places_simple.json').then((res: any) => {
+    // http://192.168.1.103:8081
+    axios.get('http://192.168.1.104:8081/places_simple.json').then((res: any) => {
       if (res.data && 'features' in res.data) {
-        if (store.getFeatures() == res.data.features) return;
-        store.updateFeatures(res.data.features);
+        if (store.getters.getFeatures() == res.data.features) return;
+        store.commit('updateFeatures', res.data.features);
         this.updateFiltered();
         this.loading = false;
       }
     });
+    this.loading = true;
     // if we already have an app shared city list, do not show blocking loading..
-    if (store.getFeatures().length != 0) {
-      this.updateFiltered();
-      console.warn(`got latest filtered result ${this.items.length} items`);
-    } else {
-      this.loading = true;
-    }
+    this.updateFiltered();
+    console.warn(`got latest filtered result ${this.items.length} items`);
   }
 
   render(h: CreateElement): VNode {
